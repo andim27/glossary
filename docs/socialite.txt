@@ -1,0 +1,8 @@
+Socialite
+
+
+To enable the provider create a new GitHub application and use https://example.com/api/oauth/github/callback as the Authorization callback URL.
+
+Edit .env and set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET with the keys form your GitHub application.
+
+For other providers you may need to set the appropriate keys in config/services.php and redirect url in OAuthController.php.
