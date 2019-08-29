@@ -9,7 +9,7 @@
             <div class="input-group mb-3">
               <input type="text" class="form-control" placeholder="Search" v-model="search_word">
               <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Go</button>
+                <button class="btn btn-primary" type="submit" @click="searchWord">Go</button>
               </div>
             </div>
           </div>
@@ -20,17 +20,27 @@
               </ul>
           </div>
           <!--Word list-->
-          <div class="row">
+          <div class="row"  v-show="isSearched == false">
+              <div class="col-12">
+                  <div class="alert alert-info">
+                      <strong>Local dictionary is empty!</strong> Please add some new words
+                      <router-link :to="{ name:'translate' }" class="navbar-brand">
+                      here
+                      </router-link>
+                  </div>
+              </div>
+          </div>
+          <div class="row" v-show="isSearched">
               <div class="col-12">
                 <div class="card-group">
                   <div class="card bg-primary">
                       <div class="card-body text-center">
                           <div class="list-group">
-                              <a href="#" class="list-group-item list-group-item-action">First item</a>
-                              <a href="#" class="list-group-item list-group-item-action">Second item</a>
-                              <a href="#" class="list-group-item list-group-item-action">Third item</a>
-                              <a href="#" class="list-group-item list-group-item-action">Four item</a>
-                              <a href="#" class="list-group-item list-group-item-action">Five item</a>
+                              <a href="#" class="list-group-item list-group-item-action">First word</a>
+                              <a href="#" class="list-group-item list-group-item-action">Second word</a>
+                              <a href="#" class="list-group-item list-group-item-action">Third word</a>
+                              <a href="#" class="list-group-item list-group-item-action">Fourth word</a>
+                              <a href="#" class="list-group-item list-group-item-action">Fifth word</a>
                           </div>
                       </div>
                   </div>
@@ -40,22 +50,12 @@
                               <div class="row h-100">
                                   <div class="col-sm-12 my-auto">
                                       <div class="card card-block w-100 border-none" >
-
                                           <div class="row">
                                               <div class="col">
-                                                  <!--<locale-dropdown />-->
-                                                  <!--<select class="form-control" id="eng-to">-->
-                                                      <!--<option>Eng</option>-->
-                                                      <!--<option>Es</option>-->
-                                                      <!--<option>Rus</option>-->
-                                                  <!--</select>-->
                                                   <lang-select></lang-select>
                                               </div>
-                                              <!--<div class="col">-->
-                                                  <!--<i class='far fa-hand-point-right' style='font-size:38px;color:blue' ></i>-->
-                                              <!--</div>-->
-                                          </div>
 
+                                          </div>
 
                                       </div>
                                   </div>
@@ -101,13 +101,20 @@ export default {
   data: () => ({
     search_word:'',
     //  "abcdefghijklmnopqrstuvwxyz"
-    firstLetters: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    firstLetters: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+    isSearched:false
   }),
 
   methods: {
     letterClick (letter) {
       this.search_word += letter;
+    },
+    searchWord () {
+      //--get local dictionary
+      //--search
+      this.isSearched = true;
     }
+
   },
 
   metaInfo () {

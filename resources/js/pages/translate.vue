@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <lang-select></lang-select>
+                    <lang-select ref="curlang"></lang-select>
                 </div>
                 <div class="col-5">
                     <div class="form-inline">
@@ -26,58 +26,25 @@
     <div class="row align-items-center mt-4">
 
         <div class="col-6 offset-4">
-            <div class="card dic-card-width" >
-                <div class="card-header back-color">
-                    <strong>Spanish</strong>
+            <div class="card dic-card-width"  v-for="(item,index) in dictionary" v-show="item.translations.length >0" >
+                <div class="card-header back-color" >
+                    <strong>{{item.lang_title_to}}</strong>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-5">Table</div>
+                        <div class="row" v-for="translated_item in item.translations" >
+                            <div class="col-5">{{translated_item.word_from}}</div>
                             <div class="col-2">
                                 <i class='far fa-hand-point-right' style='font-size:18px;color:blue' ></i>
 
                             </div>
-                            <div class="col-5">Mesa</div>
+                            <div class="col-5">{{translated_item.word_to}}</div>
                         </div>
                     </li>
                 </ul>
             </div>
-            <div class="card dic-card-width" >
-                <div class="card-header back-color">
-                    <strong>French</strong>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-5">Table</div>
-                            <div class="col-2">
-                                <i class='far fa-hand-point-right' style='font-size:18px;color:blue' ></i>
 
-                            </div>
-                            <div class="col-5">le tableau</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="card dic-card-width" >
-                <div class="card-header back-color">
-                    <strong>Russian</strong>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="col-5">Table</div>
-                            <div class="col-2">
-                                <i class='far fa-hand-point-right' style='font-size:18px;color:blue' ></i>
-
-                            </div>
-                            <div class="col-5">Стол</div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="row">
+            <div class="row" v-show="some_added">
                 <div class="col offset-2 mt-2">
                     <button class="btn btn-primary mx-auto mt-1">Save</button>
                 </div>
@@ -101,25 +68,58 @@
 
     data: () => ({
       cur_lang_from:'eng',
+      cur_lang_to:'eng',
       word_from:'',
       word_to:'',
-      dictionary:[] //[{lang_code_from:'eng',lang_code_to:'rus',word_from:'table',word_to:'стол'}]
+      dictionary:[],
+      words_add_limit:5,
+      some_added:false
     }),
 
-    methods: {
-      getCurLangTo () {
-        return  'fr';
-      },
-      addTranslation () {
+    mounted () {
+      this.initDictionary()
+      this.initCurLang()
+      self = this;
+      this.$root.$on('changeCurLang',function (lang) {
+        self.cur_lang_to = lang;
+        console.log('Set cur_lang_to:',lang);
+      });
+    },
 
+    methods: {
+      initDictionary () {
+        this.dictionary = [ // -- translations:[{word_from:'table',word_to:'стол'}]
+          {lang_code_from:'eng',lang_code_to:'sp', lang_title_to:'Spanish:', translations:[]},
+          {lang_code_from:'eng',lang_code_to:'fr', lang_title_to:'French:', translations:[]},
+          {lang_code_from:'eng',lang_code_to:'rus',lang_title_to:'Russian:', translations:[]}
+        ];
+        console.log(this.dictionary);
+      },
+
+      initCurLang() {
+        this.cur_lang_to = this.$refs.curlang.getCurLang();
+        console.log('Translate cur lang:'+this.cur_lang_to);
+      },
+
+      getCurLangTo () {
+        return  this.cur_lang_to;
+      },
+
+      addTranslation () {
         let translation = {
-          lang_code_from:this.cur_lang_from,
-          lang_code_to:this.getCurLangTo(),
           word_from:this.word_from,
           word_to:this.word_to
         };
-        this.dictionary.push(translation);
-        console.log(this.dictionary.length);
+        for (let dic_item in this.dictionary) {
+          let item = this.dictionary[dic_item];
+          let words_lenth = item.translations.length;
+          if ((item.lang_code_to == this.cur_lang_to) && (words_lenth < this.words_add_limit)) {
+                item.translations.push(translation);
+                this.some_added = true;
+                console.log('added to :'+item.lang_code_to,translation);
+          }
+        }
+
       }
     },
 

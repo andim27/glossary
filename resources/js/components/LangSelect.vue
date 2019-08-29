@@ -2,8 +2,11 @@
     <div class="row">
         <div class="col-8">
             <!--<locale-dropdown />-->
-            <select class="form-control" id="eng-to" >
-                <option v-for="item in langList">{{item.lang_code}}</option>
+            <select class="form-control" id="eng-to" @change="onChangeCurLang($event)" v-model="cur_lang">
+                <option
+                        v-for="(item,index) in langList" :value=item.lang_code  :selected="index == 0" >
+                        {{item.lang_code}}
+                </option>
             </select>
         </div>
         <div class="col-2">
@@ -21,6 +24,7 @@ export default {
     },
 
     data: () => ({
+        cur_lang:'sp',
         langList: [
           // {lang_code:'eng',lang_title:'English'},
           {lang_code:'sp',lang_title:'Spanish'},
@@ -28,6 +32,19 @@ export default {
           {lang_code:'rus',lang_title:'Russian'},
         ]
     }),
+
+    methods: {
+      getLangList () {
+        return this.langList;
+      },
+      getCurLang () {
+        return this.cur_lang;
+      },
+      onChangeCurLang (event) {
+        console.log('Change cur_lang ',this.cur_lang);
+        this.$root.$emit('changeCurLang',this.cur_lang);
+      }
+    }
 
 }
 </script>
