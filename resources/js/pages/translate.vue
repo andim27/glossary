@@ -46,7 +46,7 @@
 
             <div class="row" v-show="some_added">
                 <div class="col offset-2 mt-2">
-                    <button class="btn btn-primary mx-auto mt-1">Save</button>
+                    <button class="btn btn-primary mx-auto mt-1" @click="save">Save</button>
                 </div>
 
             </div>
@@ -120,6 +120,10 @@
           }
         }
 
+      },
+
+      save () {
+        localStorage.setItem('dictionary', JSON.stringify(this.dictionary));
       }
     },
 
