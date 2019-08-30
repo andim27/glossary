@@ -7,7 +7,7 @@
           <!--Search input-->
           <div class="row">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Search" v-model="search_word" @keydown.enter="search_word">
+              <input type="text" class="form-control" placeholder="Search" v-model="search_word" @keydown.enter="searchWord">
               <div class="input-group-append">
                 <button class="btn btn-primary" type="submit" @click="searchWord">Go</button>
               </div>
@@ -46,7 +46,7 @@
                   <div class="card bg-primary" >
                       <div class="card-body text-center">
                           <div class="list-group" v-for="word in searched_words">
-                              <a href="#" class="list-group-item list-group-item-action" @keyup.enter="translateWord(word)" @click="translateWord(word)">{{word}}</a>
+                              <a href="#" class="list-group-item list-group-item-action" @keyup.enter="translateWord(word)" @click="translateWord(word)"><span class="founded-item">{{word}}</span></a>
                           </div>
                       </div>
                   </div>
@@ -122,6 +122,7 @@ export default {
     self = this;
     this.$root.$on('changeCurLang',function (lang) {
       self.cur_lang_to = lang;
+      self.translated_word ='???';
     });
   },
 
@@ -155,6 +156,19 @@ export default {
                 }
            }
       }
+      this.clearDuplicate();
+    },
+
+    clearDuplicate() {
+      console.log('Before:', this.searched_words);
+      let unique = {};
+      this.searched_words.forEach(function(i) {
+        if(!unique[i]) {
+          unique[i] = true;
+        }
+      });
+      this.searched_words = Object.keys(unique);
+      console.log('After:', this.searched_words);
     },
 
     translateWord (word_from) {
@@ -194,4 +208,9 @@ export default {
     text-decoration: underline;
     cursor: pointer;
 }
+.founded-item:hover {
+    background-color: yellow;
+    color: blue;
+}
+
 </style>
